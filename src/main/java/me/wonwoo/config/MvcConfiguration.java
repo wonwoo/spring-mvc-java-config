@@ -25,8 +25,7 @@ import java.util.Arrays;
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
   @Bean
-  @Primary
-  public ObjectMapper jacksonObjectMapper() {
+  public ObjectMapper objectMapper() {
     return new ObjectMapper();
   }
 
