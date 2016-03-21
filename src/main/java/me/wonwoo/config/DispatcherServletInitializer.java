@@ -1,8 +1,8 @@
 package me.wonwoo.config;
 
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -18,19 +18,20 @@ import javax.servlet.ServletRegistration;
 public class DispatcherServletInitializer implements WebApplicationInitializer {
 
   @Override
-  public void onStartup(ServletContext servletContext)
-    throws ServletException {
-    AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-    rootContext.register(RootConfiguration.class);
-
-    servletContext.addListener(new ContextLoaderListener(rootContext));
+  public void onStartup(ServletContext servletContext) throws ServletException {
+//    AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
+//    rootContext.register(RootConfiguration.class);
 
     AnnotationConfigWebApplicationContext dispatcherServlet = new AnnotationConfigWebApplicationContext();
     dispatcherServlet.register(MvcConfiguration.class);
+    servletContext.addListener(new ContextLoaderListener(dispatcherServlet));
 
     ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatcherServlet));
     dispatcher.setLoadOnStartup(1);
     dispatcher.addMapping("/");
+
+//    FilterRegistration.Dynamic openEntityManagerInViewFilter = servletContext.addFilter("openEntityManagerInViewFilter", OpenEntityManagerInViewFilter.class);
+//    openEntityManagerInViewFilter.addMappingForUrlPatterns(null, true, "/*");
 
     FilterRegistration.Dynamic filter = servletContext.addFilter("CHARACTER_ENCODING_FILTER", CharacterEncodingFilter.class);
     filter.setInitParameter("encoding", "UTF-8");

@@ -1,9 +1,9 @@
 package me.wonwoo.config;
 
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -11,11 +11,13 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
 import java.util.Properties;
 
 /**
@@ -27,6 +29,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class RootConfiguration {
 
+
   @Bean
   public DataSource dataSource() {
     EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
@@ -37,12 +40,7 @@ public class RootConfiguration {
   }
 
   @Bean
-  public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
-    return entityManagerFactory.createEntityManager();
-  }
-
-  @Bean
-  public FactoryBean<EntityManagerFactory> entityManagerFactory() {
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
     LocalContainerEntityManagerFactoryBean containerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
     containerEntityManagerFactoryBean.setDataSource(dataSource());
     JpaVendorAdapter adaptor = new HibernateJpaVendorAdapter();
@@ -52,14 +50,20 @@ public class RootConfiguration {
     props.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
     props.setProperty("hibernate.show_sql", "true");
     props.setProperty("hibernate.hbm2ddl.auto", "create");
+    props.setProperty("hibernate.connection.autocommit", "false");
     containerEntityManagerFactoryBean.setJpaProperties(props);
     return containerEntityManagerFactoryBean;
   }
 
   @Bean
-  public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-    JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-    jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
+  public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+    return new PersistenceExceptionTranslationPostProcessor();
+  }
+
+  @Bean
+  public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
+    jpaTransactionManager.setDataSource(dataSource());
     return jpaTransactionManager;
   }
 }

@@ -1,5 +1,6 @@
 package me.wonwoo.account;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +11,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/account")
+@Slf4j
 public class AccountController {
 
   @Autowired
@@ -20,12 +22,14 @@ public class AccountController {
 
   @RequestMapping("/")
   public List<Account> accounts() {
-    return accountRepository.findAll();
+    List<Account> accounts = accountRepository.findAll();
+    accounts.stream().map(x -> x.toString()).forEach(log::debug);
+    return accounts;
   }
 
   @RequestMapping("/{id}")
   public Account account(@PathVariable Long id) {
-    return accountRepository.findOne(id);
+    return accountService.findOne(id);
   }
 
   @RequestMapping(value = "/", method = RequestMethod.POST)

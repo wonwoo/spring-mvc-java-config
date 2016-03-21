@@ -3,12 +3,14 @@ package me.wonwoo.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.wonwoo.account.Account;
 import me.wonwoo.account.AccountRepository;
+import me.wonwoo.account.Product;
+import me.wonwoo.account.ProductRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -22,6 +24,7 @@ import java.util.Arrays;
 @ComponentScan(
   basePackages = "me.wonwoo.account"
 )
+@Import(RootConfiguration.class)
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
   @Bean
@@ -29,15 +32,24 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     return new ObjectMapper();
   }
 
+
   @Autowired
   private AccountRepository accountRepository;
+
+  @Autowired
+  private ProductRepository productRepository;
 
   @Bean
   public InitializingBean initializingBean() {
     return () -> {
+
+      Product macbook = new Product(1L, "macbook");
+      Product macbook2 = new Product(2L, "imac");
+      Arrays.asList(macbook,macbook2).forEach(productRepository::save);
+
       Arrays.asList(
-        new Account(1L, "wonwoo"),
-        new Account(2L, "kevin")
+        new Account(1L, "wonwoo", macbook),
+        new Account(2L, "kevin", macbook2)
       ).forEach(accountRepository::save);
     };
   }
