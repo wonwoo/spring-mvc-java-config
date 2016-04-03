@@ -1,10 +1,10 @@
 package me.wonwoo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.wonwoo.account.Account;
-import me.wonwoo.account.AccountRepository;
-import me.wonwoo.account.Product;
-import me.wonwoo.account.ProductRepository;
+import me.wonwoo.domain.Account;
+import me.wonwoo.repository.AccountRepository;
+import me.wonwoo.domain.Product;
+import me.wonwoo.repository.ProductRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,16 +22,14 @@ import java.util.Arrays;
 @Configuration
 @EnableWebMvc
 @ComponentScan(
-  basePackages = "me.wonwoo.account"
+  basePackages = "me.wonwoo.controller"
 )
-@Import(RootConfiguration.class)
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
   @Bean
   public ObjectMapper objectMapper() {
     return new ObjectMapper();
   }
-
 
   @Autowired
   private AccountRepository accountRepository;

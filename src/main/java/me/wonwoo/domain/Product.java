@@ -1,4 +1,4 @@
-package me.wonwoo.account;
+package me.wonwoo.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

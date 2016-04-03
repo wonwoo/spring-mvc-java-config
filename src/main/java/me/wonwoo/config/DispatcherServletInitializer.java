@@ -1,6 +1,5 @@
 package me.wonwoo.config;
 
-import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -19,14 +18,14 @@ public class DispatcherServletInitializer implements WebApplicationInitializer {
 
   @Override
   public void onStartup(ServletContext servletContext) throws ServletException {
-//    AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-//    rootContext.register(RootConfiguration.class);
+    AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
+    rootContext.register(RootConfiguration.class);
 
-    AnnotationConfigWebApplicationContext dispatcherServlet = new AnnotationConfigWebApplicationContext();
-    dispatcherServlet.register(MvcConfiguration.class);
-    servletContext.addListener(new ContextLoaderListener(dispatcherServlet));
+//    AnnotationConfigWebApplicationContext dispatcherServlet = new AnnotationConfigWebApplicationContext();
+//    dispatcherServlet.register(MvcConfiguration.class);
+    servletContext.addListener(new ContextLoaderListener(rootContext));
 
-    ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatcherServlet));
+    ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(rootContext));
     dispatcher.setLoadOnStartup(1);
     dispatcher.addMapping("/");
 

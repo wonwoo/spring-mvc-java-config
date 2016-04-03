@@ -25,45 +25,9 @@ import java.util.Properties;
  */
 
 @Configuration
-@EnableJpaRepositories(basePackages = "me.wonwoo.account")
-@EnableTransactionManagement
+@ComponentScan(basePackages = {
+  "me.wonwoo.service"
+})
+@Import({MvcConfiguration.class, PersistenceContext.class})
 public class RootConfiguration {
-
-
-  @Bean
-  public DataSource dataSource() {
-    EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-    EmbeddedDatabase db = builder
-      .setType(EmbeddedDatabaseType.H2)
-      .build();
-    return db;
-  }
-
-  @Bean
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-    LocalContainerEntityManagerFactoryBean containerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-    containerEntityManagerFactoryBean.setDataSource(dataSource());
-    JpaVendorAdapter adaptor = new HibernateJpaVendorAdapter();
-    containerEntityManagerFactoryBean.setJpaVendorAdapter(adaptor);
-    containerEntityManagerFactoryBean.setPackagesToScan("me.wonwoo.account");
-    Properties props = new Properties();
-    props.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-    props.setProperty("hibernate.show_sql", "true");
-    props.setProperty("hibernate.hbm2ddl.auto", "create");
-    props.setProperty("hibernate.connection.autocommit", "false");
-    containerEntityManagerFactoryBean.setJpaProperties(props);
-    return containerEntityManagerFactoryBean;
-  }
-
-  @Bean
-  public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-    return new PersistenceExceptionTranslationPostProcessor();
-  }
-
-  @Bean
-  public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-    JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
-    jpaTransactionManager.setDataSource(dataSource());
-    return jpaTransactionManager;
-  }
 }

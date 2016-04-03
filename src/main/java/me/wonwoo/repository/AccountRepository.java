@@ -1,5 +1,6 @@
-package me.wonwoo.account;
+package me.wonwoo.repository;
 
+import me.wonwoo.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

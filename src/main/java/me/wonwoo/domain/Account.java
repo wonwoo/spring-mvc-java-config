@@ -1,11 +1,10 @@
-package me.wonwoo.account;
+package me.wonwoo.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by wonwoo on 2016. 3. 19..

@@ -1,7 +1,7 @@
 package me.wonwoo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.wonwoo.account.Account;
+import me.wonwoo.domain.Account;
 import me.wonwoo.config.MvcConfiguration;
 import me.wonwoo.config.RootConfiguration;
 import org.junit.Before;
