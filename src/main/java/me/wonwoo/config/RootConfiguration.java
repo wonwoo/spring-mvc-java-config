@@ -1,6 +1,7 @@
 package me.wonwoo.config;
 
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -29,5 +30,11 @@ import java.util.Properties;
   "me.wonwoo.service"
 })
 @Import({MvcConfiguration.class, PersistenceContext.class})
+@PropertySource(value = "classpath:context.properties")
 public class RootConfiguration {
+
+  @Bean
+  public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+    return new PropertySourcesPlaceholderConfigurer();
+  }
 }

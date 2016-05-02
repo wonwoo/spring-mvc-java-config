@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -44,6 +45,16 @@ public class AccountTest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+
+  @Value("${name}")
+  private String name;
+
+  @Test
+  public void propertiesTest(){
+    System.out.println(name);
+
+  }
 
   @Before
   public void before() {
