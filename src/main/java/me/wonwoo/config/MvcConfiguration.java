@@ -1,7 +1,9 @@
 package me.wonwoo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.wonwoo.domain.converter.MyConverter;
 import me.wonwoo.domain.Account;
+import me.wonwoo.domain.validation.AccountValidation;
 import me.wonwoo.repository.AccountRepository;
 import me.wonwoo.domain.Product;
 import me.wonwoo.repository.ProductRepository;
@@ -10,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -26,10 +29,16 @@ import java.util.Arrays;
 )
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
+
   @Bean
   public ObjectMapper objectMapper() {
     return new ObjectMapper();
   }
+
+@Override
+public void addFormatters(FormatterRegistry registry){
+  registry.addConverter(new MyConverter());
+}
 
   @Autowired
   private AccountRepository accountRepository;
